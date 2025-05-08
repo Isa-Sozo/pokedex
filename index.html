@@ -73,6 +73,28 @@
             margin-bottom: 10px;
             font-size: 14px;
         }
+        .area-busca button {
+            padding: 8px 12px;
+            background-color: #118ab2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transforme 0.3s ease;
+        }
+        .area-busca button:hover{
+            background-color: #0b536b;
+            transform: scale(1.05);
+        }
+        .chip-tipo{
+            display: inline-block;
+            margin: 5px;
+            background-color: #ddd;
+            padding: 5px 10 px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
 
     </style>
 
@@ -93,5 +115,61 @@
     </div>
 
     </div>
+    <script>
+       const botaoBuscar = document.getElementById('botao-buscar')
+        const campoEntrada = document.getElementById('entrada')
+
+        botaoBuscar.addEventListener('click', async () =>{
+            const buscar = campoEntrada.value.toLowerCase().trim();
+            if(!buscar){ 
+                return;
+            } 
+            try{
+                const resposta = await fetch('https://pokeapi.co/api/v2/pokemon/${busca}')
+                if(!respota.ok) throw new Error('Pokemon não encontrado!')
+                const dados = await resposta.json();
+                document.getElementById('nome').textContent = dados.name;
+                document.getElementById('numero').textContent = '#${dados.id}'
+                document.getElementById('imagem').src = dados.sprites.front_default;
+
+                const tipos = document.getElementById("tipo");
+                tipos.innerHTML = '';
+
+                dados.types.forEach(tipoInfo =>{
+                    const tipo = tipoInfo.type.name;
+                    const chip = document.createElement('span');
+                    chip.className = 'chip-tipo';
+                    chip.textContent = tipo;
+                    chip.style.backgroundColor = corDoTipo(tipo);
+                    tipos.appendChild(chip);
+                });
+
+            }catch(error){
+                alert(error.message);
+            }
+            function corDoTipo(tipo){
+                const cores = {
+                    fire: "#f94144",
+                    water: "#577590",
+                    grass: "#43aa9b",
+                    eletric: "#f9c74f",
+                    bug:"#98be6d",
+                    normal: "#adb5bd",
+                    poison:"9d4edd",
+                    ground:"#74a261",
+                    psychic:"#f72585",
+                    fighting: "#d00000",
+                    rock:"6c584c",
+                    gohst: "#8339ec",
+                    dragon:"#3a06a3",
+                    dark: "#2d31453",
+                    ice:"#a8dac",
+                    fairy:"#ffafcc",
+                    flying:"#48cae4",
+                    steel:"#8d9ae"
+                }
+            }
+         })
+    </script>
 </body>
 </html>
